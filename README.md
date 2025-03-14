@@ -4,11 +4,9 @@ A Flutter project demonstrating UIKitView with backdrop filter effects.
 
 ## Screenshots
 
-![IMG_4758](git/IMG_4758.PNG)
-
-![IMG_4759](git/IMG_4759.PNG)
-
-![IMG_4761](git/IMG_4761.PNG)
+| pic1 | pic2 | pic3 |
+|:---:|:---:|:---:|
+| <img src="git/IMG_4758.PNG" width="250"> | <img src="git/IMG_4759.PNG" width="250"> | <img src="git/IMG_4761.PNG" width="250"> |
 
 ## Environment
 
