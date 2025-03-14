@@ -76,6 +76,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _showBackdropDialog() {
+    /// Display the native button when the dialog is shown.
+    _toggleNativeButton();
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
