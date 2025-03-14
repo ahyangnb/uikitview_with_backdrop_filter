@@ -4,4 +4,5 @@ git/IMG_4759.PNG
 git/IMG_4761.PNG
 
 
-it's been solved in latest flutter.
+Env:
+flutter 3.29.0
