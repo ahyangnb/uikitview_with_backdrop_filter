@@ -1,8 +1,22 @@
 # uikitview_with_backdrop_filter
-git/IMG_4758.PNG
-git/IMG_4759.PNG
-git/IMG_4761.PNG
 
+A Flutter project demonstrating UIKitView with backdrop filter effects.
 
-Env:
-flutter 3.29.0
+## Screenshots
+
+![IMG_4758](git/IMG_4758.PNG)
+
+![IMG_4759](git/IMG_4759.PNG)
+
+![IMG_4761](git/IMG_4761.PNG)
+
+## Environment
+
+- Flutter 3.29.0
+
+## Features
+
+- Dark theme UI
+- Native iOS button integration using UIKitView
+- Backdrop filter effect with blur
+- Modal bottom sheet with transparency
