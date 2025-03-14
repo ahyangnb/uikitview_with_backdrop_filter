@@ -14,6 +14,169 @@ the whole project created by flutter 3.29.0.
 
 - Flutter 3.29.0
 
+## Main dart code
+```dart
+class _MyHomePageState extends State<MyHomePage> {
+  bool _isNativeButtonVisible = false;
+  static const platform = MethodChannel('native_button_channel');
+
+  Future<void> _toggleNativeButton() async {
+    try {
+      await platform.invokeMethod(
+          _isNativeButtonVisible ? 'hideNativeButton' : 'showNativeButton');
+      setState(() {
+        _isNativeButtonVisible = !_isNativeButtonVisible;
+      });
+    } on PlatformException catch (e) {
+      debugPrint("Failed to toggle native button: ${e.message}");
+    }
+  }
+
+  Widget _buildNativeView() {
+    if (!_isNativeButtonVisible) {
+      return const SizedBox.shrink();
+    }
+
+    return const SizedBox(
+      height: 100,
+      width: 100,
+      child: UiKitView(
+        viewType: 'native_button_view',
+        creationParams: <String, dynamic>{},
+        creationParamsCodec: StandardMessageCodec(),
+        hitTestBehavior: PlatformViewHitTestBehavior.transparent,
+        gestureRecognizers: const <Factory<OneSequenceGestureRecognizer>>{},
+      ),
+    );
+  }
+
+  void _showBackdropDialog() {
+    /// Display the native button when the dialog is shown.
+    if (!_isNativeButtonVisible) {
+      _toggleNativeButton();
+    }
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      barrierColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return Material(
+          type: MaterialType.transparency,
+          child: Container(
+            height: 500,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(120),
+              ),
+              color: Colors.red.withOpacity(0.3),
+            ),
+            clipBehavior: Clip.hardEdge,
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      'Dialog with Backdrop',
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        _toggleNativeButton();
+                      },
+                      child: Text(_isNativeButtonVisible
+                          ? 'Hide Native Button'
+                          : 'Show Native Button'),
+                    ),
+                    const SizedBox(height: 10),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('Close'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black87,
+      appBar: AppBar(backgroundColor: Colors.black, title: Text(widget.title)),
+      body: Stack(
+        children: [
+          ListView.builder(itemBuilder: (context, index) {
+            return ElevatedButton(
+              onPressed: _showBackdropDialog,
+              style: ButtonStyle(
+                padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
+              ),
+              child: const Text(
+                  'ShowDialogShowDialogShowDialogShowDialogShowDialog'),
+            );
+          }),
+          Positioned(bottom: 420, left: 0, child: _buildNativeView()),
+        ],
+      ),
+    );
+  }
+}
+```
+
+## Main ios-swift code
+```swift
+class NativeButtonViewFactory: NSObject, FlutterPlatformViewFactory {
+  override init() {
+    super.init()
+  }
+  
+  func create(
+    withFrame frame: CGRect,
+    viewIdentifier viewId: Int64,
+    arguments args: Any?
+  ) -> FlutterPlatformView {
+    return NativeButtonView(frame: frame, viewId: viewId, args: args)
+  }
+  
+  func createArgsCodec() -> FlutterMessageCodec & NSObjectProtocol {
+    return FlutterStandardMessageCodec.sharedInstance()
+  }
+}
+
+class NativeButtonView: NSObject, FlutterPlatformView {
+  private let button: UIButton
+  
+  init(frame: CGRect, viewId: Int64, args: Any?) {
+    button = UIButton(frame: frame)
+    super.init()
+    
+    button.backgroundColor = .systemBlue
+    button.setTitle("Native iOS Button", for: .normal)
+    button.layer.cornerRadius = 10
+    button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+  }
+  
+  func view() -> UIView {
+    return button
+  }
+  
+  @objc private func buttonTapped() {
+    print("Native button tapped")
+  }
+}
+```
+
 ## Features
 
 - Dark theme UI
